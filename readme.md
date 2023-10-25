@@ -42,6 +42,13 @@ This Python script employs Selenium to automate a sequence of steps for searchin
    pip install -r requirements/base.txt
 ```
 
+### Running the Tests
+To run the unit tests, make sure you are in the project directory and the virtual environment is activated.
+
+```sh
+   python -m unittest discover tests
+```
+
 ### Running the Code
 
 To run the code, make sure you are in the project directory and the virtual environment is activated.
