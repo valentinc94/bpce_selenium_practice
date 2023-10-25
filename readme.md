@@ -13,7 +13,7 @@ This Python script employs Selenium to automate a sequence of steps for searchin
 2.  Change into the project directory:
 
 ```sh
-   cd bpce
+   cd bpce_selenium_practice
 ```
 
 3.  Create a virtual environment (optional, but recommended):
