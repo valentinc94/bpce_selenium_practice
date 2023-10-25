@@ -7,7 +7,7 @@ This Python script employs Selenium to automate a sequence of steps for searchin
 1.  Clone the repository to your local machine:
 
 ```sh
-   git clone https://github.com/valentinc94/bpce.git
+   git clone https://github.com/valentinc94/bpce_selenium_practice.git
 ```
 
 2.  Change into the project directory:
