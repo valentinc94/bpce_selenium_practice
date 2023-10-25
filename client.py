@@ -5,6 +5,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.keys import Keys
 
 class NoSuchElementException(Exception):
     pass
@@ -17,11 +18,11 @@ logging.basicConfig(
 )
 
 class FrenchPopularBank:
-    def __init__(self, street: str = "Lyon Perrache", zip_code: str = "69000", position_on_map: int = 4):
+    def __init__(self, street: str = "Lyon", zip_code: str = "69000", position_on_map: int = 4):
         """
         Initializes an instance of FrenchPopularBank.
 
-        :param street: The street for agency search (default is "Lyon Perrache").
+        :param street: The street for agency search (default is "Lyon").
         :param zip_code: The postal code for agency search (default is "69000").
         :param position_on_map: The position on the map to capture (default is 4).
         """
@@ -47,9 +48,9 @@ class FrenchPopularBank:
         # Locate the "Tout accepter" (Accept All) button by its CSS selector and click it
         cookie_button = self.driver.find_element(By.CSS_SELECTOR, "#consent_prompt_submit")
         time.sleep(1)
-        self.driver.save_screenshot("step_zero.png")
+        self.driver.save_screenshot("step_0.png")
         cookie_button.click()
-        self.driver.save_screenshot("step_one.png")
+        self.driver.save_screenshot("step_1.png")
         logging.info("Accepted cookies")
 
     def find_agency(self):
@@ -62,20 +63,34 @@ class FrenchPopularBank:
         )
         # Click on the element
         find_agency_element.click()
-        self.driver.save_screenshot("step_two.png")
+        self.driver.save_screenshot("step_2.png")
         logging.info("Clicked on 'Trouver une agence'")
 
     def fill_address(self):
         """
         Fills in the address (Rue) and postal code fields in the agency search form.
         """
-        # Locate and fill in the street (Rue) input field
-        street_input = self.driver.find_element(By.ID, "em-search-form__searchstreet")
-        street_input.send_keys(self.street)
+
         # Locate and fill in the postal code input field
         postal_code_input = self.driver.find_element(By.ID, "em-search-form__searchcity")
         postal_code_input.send_keys(self.zip_code)
-        self.driver.save_screenshot("step_three.png")
+
+        # Locate and fill in the street (Rue) input field
+        street_input = self.driver.find_element(By.ID, "em-search-form__searchstreet")
+        street_input.send_keys(self.street)
+
+        # Simulate pressing Enter
+        street_input.send_keys(Keys.RETURN)
+
+        time.sleep(1)
+
+        self.driver.save_screenshot("step_3.png")
+
+        # Use JavaScript to click "Lyon Perrache" in the dropdown
+        js_click = f"document.getElementById('cgeocoder29_street_1').click();"
+        self.driver.execute_script(js_click)
+
+        self.driver.save_screenshot("step_4.png")
         logging.info("Filled in address information")
 
     def search_agency(self):
@@ -89,7 +104,7 @@ class FrenchPopularBank:
         wait = WebDriverWait(self.driver, 10)
         wait.until(EC.url_changes(self.driver.current_url))
         time.sleep(1)
-        self.driver.save_screenshot("step_four.png")
+        self.driver.save_screenshot("step_5.png")
         logging.info("Clicked on 'Rechercher'")
 
     def collect_agency_elements(self):
@@ -97,6 +112,7 @@ class FrenchPopularBank:
         Collects agency elements on the search results page.
         """
         # Collect agency elements
+        self.driver.execute_script("window.scrollBy(0, 200);")
         agency_elements = self.driver.find_elements(By.CLASS_NAME, "em-results__item")
         return agency_elements
 
@@ -113,7 +129,7 @@ class FrenchPopularBank:
             element_to_hover = self.driver.find_element(
                 By.XPATH, f"//td[text()='{self.position_on_map}']"
             )
-            self.hover_and_capture(element_to_hover, "step_five.png")
+            self.hover_and_capture(element_to_hover, "step_6.png")
         else:
             raise NoSuchElementException("The specified agency was not found.")
 
